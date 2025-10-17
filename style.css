@@ -1,0 +1,626 @@
+/* ===========================
+   🌀 Loader Animation
+   =========================== */
+.loader {
+  width: 24px;
+  height: 24px;
+  border: 3px solid #ffd1cd;
+  /* outer ring color */
+  border-top-color: transparent;
+  /* creates the spinning gap */
+  border-radius: 50%;
+  /* circular shape */
+  margin: 0 auto 8px;
+  animation: spin 0.8s linear infinite;
+  /* continuous rotation */
+}
+
+/* Keyframes for the spinning loader */
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+
+/* ===========================
+   🌈 Root Variables
+   Define theme colors, radii, and shadows
+   =========================== */
+:root {
+  --bg: #e9eef6;
+  /* overall soft gray-blue background */
+  --card: #f4f7ff;
+  /* surface color for cards */
+  --txt: #0f172a;
+  /* main text color (slate-900) */
+  --muted: #475569;
+  /* muted/subtext color (slate-600) */
+  --primary: #0f172a;
+  /* main heading color */
+  --secondary: #fa2a55;
+  /* accent pinkish-red */
+  --ok: #22c55e;
+  /* success (green) */
+  --warn: #f59e0b;
+  /* warning (amber) */
+  --bad: #ef4444;
+  /* error (red) */
+
+  --radius: 22px;
+  /* consistent large rounding */
+  --shadow-out: 12px 12px 24px #d6d6d6, -12px -12px 24px #ffffff;
+  /* raised look */
+  --shadow-in: inset 8px 8px 16px #d9d9d9, inset -8px -8px 16px #ffffff;
+  /* pressed look */
+  --shadow-soft: 8px 8px 16px #d9d9d9, -8px -8px 16px #ffffff;
+  /* gentle outer shadow */
+}
+
+
+/* ===========================
+   🧱 Base Styles
+   =========================== */
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  background: var(--bg);
+  font-family: Inter, system-ui, Segoe UI, Roboto, Arial, sans-serif;
+  color: var(--txt);
+  scroll-behavior: smooth;
+  width: 100%;
+}
+
+
+/* ===========================
+   🧭 Navbar
+   =========================== */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 20px;
+  box-shadow: var(--shadow-soft);
+}
+
+/* Brand logo and name */
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logo {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: var(--shadow-in);
+  display: grid;
+  place-items: center;
+  font-weight: 800;
+  color: var(--secondary);
+}
+
+.brand h1 {
+  font-size: 20px;
+  margin: 0;
+}
+
+/* Navbar links */
+.nav a {
+  color: var(--txt);
+  text-decoration: none;
+  margin: 0 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  transition: 0.3s;
+}
+
+.nav a:hover {
+  box-shadow: var(--shadow-soft);
+  color: var(--secondary);
+}
+
+/* Call-to-action button in navbar */
+.cta {
+  background: linear-gradient(145deg, #ffd1cd, #ffc1bc);
+  color: #7a2520;
+  font-weight: 700;
+  box-shadow: var(--shadow-soft);
+}
+
+
+/* ===========================
+   📦 Layout and Sections
+   =========================== */
+section {
+  padding: 64px 20px;
+  max-width: 1100px;
+  margin: 0 auto;
+}
+
+.grid {
+  display: grid;
+  gap: 20px;
+}
+
+/* Two-column layout for large screens */
+@media (min-width: 900px) {
+  .grid-2 {
+    grid-template-columns: 1.1fr 0.9fr;
+  }
+}
+
+
+/* ===========================
+   🪟 Cards and Tiles
+   =========================== */
+.card {
+  background: var(--card);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow-out);
+  padding: 24px;
+}
+
+.card h2 {
+  margin-top: 0;
+}
+
+/* Pills and tags */
+.pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #ffeceb;
+  padding: 8px 12px;
+  border-radius: 999px;
+  color: var(--muted);
+  font-weight: 600;
+}
+
+.tag {
+  display: inline-block;
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #ffeceb;
+  color: #8a1f19;
+  margin-right: 8px;
+}
+
+
+/* ===========================
+   🔘 Buttons
+   =========================== */
+.btn {
+  border: 0;
+  border-radius: 16px;
+  padding: 12px 16px;
+  background: var(--card);
+  box-shadow: var(--shadow-soft);
+  font-weight: 700;
+  transition: 0.3s;
+}
+
+.btn:active {
+  box-shadow: var(--shadow-in);
+}
+
+/* Primary button (accented) */
+.btn-primary {
+  background: linear-gradient(145deg, #ffd1cd, #ffc1bc);
+  color: #7a2520;
+}
+
+/* Cards, tiles, and insights share neumorphic shadows */
+.card,
+.tile,
+.insight {
+  box-shadow: var(--shadow-out);
+}
+
+/* Slightly softer hover/focus effect */
+/*.card:active,
+.tile:active {
+  box-shadow: inset 2px 2px 6px #d1d9e6, inset -2px -2px 6px #fff;
+}*/
+
+/* Unified neumorphic style for main elements */
+.card,
+.tile,
+.insight,
+.btn,
+.nav a {
+  box-shadow: 8px 8px 24px #c5c5c5, -8px -8px 24px #fff;
+  background: #f5f8fa;
+  transition: box-shadow 0.13s;
+}
+
+/* Slightly darker background for body */
+body,
+html {
+  background: #f0f3fa;
+}
+
+/* Buttons and links share a consistent soft shadow */
+.btn,
+.nav a {
+  box-shadow: 4px 4px 12px #bbb, -4px -4px 12px #fff;
+  background: #f5f8fa;
+  color: #2e2e2e;
+  border-radius: 16px;
+  padding: 12px 16px;
+  font-weight: 600;
+  border: none;
+  transition: box-shadow 0.13s, background 0.13s;
+}
+
+/* Hover → stronger depth illusion */
+.btn:hover,
+.nav a:hover {
+  box-shadow: var(--shadow-in);
+}
+
+/* Active → pressed-in look */
+.btn:active,
+.nav a:active {
+  box-shadow: inset 2px 2px 6px #bbb, inset -2px -2px 6px #fff;
+  background: #eceff4;
+}
+
+
+/* ===========================
+   🎚️ Slider (Soft Neumorphic)
+   =========================== */
+.slider {
+  appearance: none;
+  width: 100%;
+  height: 22px;
+  border-radius: 11px;
+  background: linear-gradient(90deg, #dedede, #e6e6e6);
+  outline: none;
+  cursor: pointer;
+}
+
+/* Slider thumb */
+.slider::-webkit-slider-thumb {
+  appearance: none;
+  width: 34px;
+  height: 19px;
+  border-radius: 10px;
+  /* pill shape */
+  background: var(--secondary);
+  box-shadow: 1px 1px 5px #ffffff;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+/* Thumb hover + active scaling */
+.slider::-webkit-slider-thumb:hover {
+  transform: scale(1.05);
+}
+
+.slider:active::-webkit-slider-thumb {
+  transform: scale(0.95);
+}
+
+/* For Firefox */
+.slider::-moz-range-thumb {
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  background: #fff;
+  border: 3px solid #ffd6d2;
+  box-shadow: var(--shadow-soft);
+}
+
+
+/* ===========================
+   📊 Stats + Insights
+   =========================== */
+.stat {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--card);
+  box-shadow: var(--shadow-in);
+  border-radius: 16px;
+  padding: 12px 14px;
+  margin: 8px 0;
+}
+
+.stat .val {
+  font-weight: 800;
+}
+
+.stat .unit {
+  color: var(--muted);
+  font-weight: 600;
+}
+/* Container for the chart */
+.card canvas {
+  background: rgba(255, 255, 255, 0.1); /* translucent glass effect */
+  border: 2px solid rgba(191, 68, 68, 0.7); /* thick colored border around the canvas */
+  border-radius: 16px; /* rounded corners */
+  box-shadow: 0 4px 15px rgba(0,0,0,0.1); /* subtle shadow for depth */
+  padding: 8px; /* optional inner spacing */
+}
+
+
+/* Insight box with accent border */
+.insight {
+  border-left: 6px solid var(--secondary);
+  padding: 10px 14px;
+  margin: 10px 0;
+  border-radius: 12px;
+  background: var(--card);
+  box-shadow: var(--shadow-soft);
+}
+
+
+/* ===========================
+   🧮 KPI Grid
+   =========================== */
+.kpi {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 14px;
+}
+
+@media (max-width: 900px) {
+  .kpi {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+.kpi .tile {
+  padding: 18px;
+  border-radius: 18px;
+  background: var(--card);
+  box-shadow: var(--shadow-out);
+}
+
+.tile h3 {
+  margin: 6px 0 8px 0;
+  font-size: 14px;
+  color: var(--muted);
+}
+
+.tile .big {
+  font-size: 30px;
+  font-weight: 800;
+}
+
+
+/* ===========================
+   ⚙️ Footer + Misc
+   =========================== */
+.footer {
+  max-width: 1100px;
+  margin: 40px auto 80px;
+  color: var(--muted);
+  text-align: center;
+}
+
+.source {
+  font-size: 12px;
+  color: var(--muted);
+}
+
+/* Invisible anchor offset for smooth scroll sections */
+.anchor {
+  position: relative;
+  top: -80px;
+  visibility: hidden;
+}
+
+.header{
+  text-align: center;
+  font-size: 47px;
+  margin-top: 100px;
+  color: var(--secondary);
+  font-weight: 1000;
+}
+.home{
+  height: 100vh;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  max-width: 100%;
+  background: #f0f3fa;
+  
+}
+body, html {
+  margin: 0;
+  padding: 0;
+}
+button:hover{ 
+  cursor: pointer;
+}
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.home .header {
+  animation: fadeUp 0.8s ease-out forwards;
+}
+.home .card {
+  opacity: 0;
+  animation: fadeUp 1s ease-out forwards;
+}
+.home .card:nth-child(1) { animation-delay: 0.3s; }
+.home .card:nth-child(2) { animation-delay: 0.6s; }
+.header, .site-name-big {
+  font-size: 6rem;     /* Large font size */
+  font-weight: 900;    /* Extra bold */
+  text-align: center;  /* Center aligned */
+  color: #bf4444;      /* Vibrant red color */
+  margin: 0;
+  padding: 0.5rem 0;
+  user-select: none;   /* Optional: prevent text selection for better UI */
+}
+.home {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+  height: 80vh; /* or desired vertical spacing */
+}
+/* ===== AIR QUALITY SEMICIRCLE ===== */
+.aq-tile {
+  text-align: center;
+  position: relative;
+  /* Ensure consistent padding with other tiles */
+  padding: 18px; 
+}
+
+.aq-gauge {
+  position: relative;
+  width: 140px;
+  height: 70px; /* Half of the width */
+  margin: 0 auto 4px; /* Add some space at the bottom */
+}
+
+.aq-arc {
+  width: 100%;
+  height: 100%;
+}
+
+/* This is the background track of the gauge */
+.aq-arc path:first-child {
+  stroke: #e0e5ec; /* A color that matches your neumorphic background */
+}
+
+/* This is the moving progress bar */
+#aqProgress {
+  transition: stroke-dashoffset 0.8s ease-out, stroke 0.5s ease;
+}
+
+.aq-text {
+  position: absolute;
+  /* Position it inside the arc */
+  bottom: 5px; 
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.5rem; /* Make it a bit bigger */
+  font-weight: 800;
+  color: var(--muted); /* Start with a muted color, JS will change it */
+  transition: color 0.5s ease;
+}
+/*.sticky-header {
+  position: fixed;
+  left: 50%;
+  top: 40vh;  
+  transform: translateX(-50%);
+  font-size: 5rem;
+  font-weight: 900;
+  color: #bf4444; 
+  transition: top 0.3s ease, font-size 0.3s ease;
+  z-index: 9999;
+  user-select: none;
+  white-space: nowrap;
+}
+.sticky-header.top {
+  top: 10px;    
+  font-size: 2rem; 
+}
+.center {
+  left: 50%;
+  transform: translateX(-50%);
+}
+*/
+.intro{
+  height: 100vh;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  display: flex;
+}
+/*.intro h1{
+  font-size: 80px;
+  font-weight:bolder;
+  color: var(--secondary);
+  text-align: center;
+}*/
+.intro h1 {
+  font-size: 6rem;
+  font-weight: 900;
+  background: linear-gradient(
+    270deg,
+    #ff2450,
+    #ff0000,
+    var(--secondary),
+    #ff245068,
+    #ff0000,
+    #b900ff,
+    #2e2d88,
+    #2666fd,
+    #543dff
+  );
+  background-size: 1600% 1600%;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: gradientShift 12s ease infinite;
+  user-select: none;
+  text-align: center;
+  margin: 0;
+  padding: 0.3em 0;
+}
+
+@keyframes gradientShift {
+  0% {
+    background-position: 0% 50%;
+  }
+
+  50% {
+    background-position: 100% 50%;
+  }
+
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+/* Arrow button */
+.scroll-arrow {
+  position: absolute;
+  bottom: 40px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+}
+
+.scroll-arrow button {
+  font-size: 2rem;
+  color: #e57373;
+  background: #f2f2f2;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  box-shadow: 6px 6px 12px #bebebe, -6px -6px 12px #ffffff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  animation: bounce 2s infinite;
+}
+
+.scroll-arrow button:hover {
+  box-shadow: inset 6px 6px 12px #bebebe, inset -6px -6px 12px #ffffff;
+  color: #ff7b7b;
+}
+.scroll-arrow,
+.scroll-arrow a {
+  list-style: none; /* remove any bullets */
+  text-decoration: none; /* remove underline if needed */
+}
