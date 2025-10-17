@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Carbon Playground</title>
+
+  <!-- Google Fonts for clean typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <!-- Chart.js for data visualization -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+
+  <!-- External stylesheet (Neumorphic Soft UI) -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+  <!-- ================= NAVBAR ================= -->
+  <nav class="nav">
+    <div class="brand">
+      <div class="logo">CO₂</div>
+      <h1 id="main-header">Carbon Playground</h1>
+    </div>
+    <div>
+      <!-- Smooth-scroll links -->
+      <a href="#home">Home</a>
+      <a href="#trends">Trends</a>
+      <a href="#sim">Simulator</a>
+      <a class="cta" href="#sim" style="background: var(--secondary), ;">Try It →</a>
+    </div>
+  </nav>
+
+  <!-- ================= HOME SECTION ================= -->
+  <span id="home" class="anchor"></span>
+    <section id="intro" class="intro">
+      <h1>Carbon Playground</h1>
+      <div class="scroll-arrow">
+        <a href="#info"><button>↓</button></a>
+      </div>
+    </section>
+  <section class="home">
+    <span id="info" class="anchor"></span>
+  <section class="grid grid-2">
+    
+    <!-- Introduction / Overview -->
+    <div class="card">
+      <span class="pill">SDG 13 • Climate Action</span>
+      <br>
+      <h2>Play with<br> causes → outcomes</h2>
+      <p>
+        Carbon Playground is an interactive learning tool to explore greenhouse gas effects
+        and policy choices. Based on <strong>SDG 13</strong> (Climate Action) and <strong>SDG 12</strong>.
+      </p>
+      <div>
+        <span class="tag">Informative</span>
+        <span class="tag">Interactive</span>
+        <span class="tag">Minimalistic</span>
+      </div>
+      <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+        <!-- Button scrolls smoothly to the simulator -->
+        <button class="btn btn-primary" onclick="document.getElementById('sim').scrollIntoView({behavior:'smooth'})">Open Simulator</button>
+        <button class="btn" onclick="document.getElementById('trends').scrollIntoView({behavior:'smooth'})">See Trends</button>
+      </div>
+    </div>
+
+    <!-- Learning insights -->
+    <div class="card">
+      <h2>What you’ll learn</h2>
+      <div class="insight">Greenhouse gases add <strong>radiative forcing</strong> (W/m²).</div>
+      <div class="insight">Cutting methane reduces near-term warming.</div>
+      <div class="insight">Energy, waste, and forest actions support SDGs.</div>
+      <p class="source">Model = simplified educational tool, not a forecast.</p>
+    </div>
+    <div class="card">
+      <h2>About the Website</h2>
+      <p>This tool helps users visualize and spread awareness on how small changes made by each individual can make drastic changes in the climate of the world</p>
+    </div>
+    <div class="card">
+      <h2>About the Team</h2>
+      <p>This website was made by <strong>Syntax Syndicate</strong> for the CHIREC Hackathon 2025</p>
+    </div>
+  </section>
+  </section>
+  <!-- ================= TRENDS SECTION ================= -->
+  <span id="trends" class="anchor"></span>
+  <section>
+    <div class="card">
+      <div style="display:flex;justify-content:space-between;align-items:center;gap:14px;flex-wrap:wrap">
+        <h2 style="margin:0">Latest Climate News & Trends</h2>
+        <button id="refreshNews" class="btn">↻ Refresh</button>
+      </div>
+      <!-- Info about data source -->
+      <p class="big">
+      A glacier broke near Kuber Peak in Uttarakhand, raising fresh concerns over Himalayan warming.
+
+      EAAA Alternatives plans ₹400 billion investment in India’s clean energy projects.
+
+      India to offer big carbon capture incentives while still relying on coal.
+
+      Heavy monsoon rains and floods in northern India are being linked to climate change. </p>
+      <div id="news" class="grid" style="grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin-top:16px"></div>
+    </div>
+  </section>
+
+  <!-- ================= SIMULATOR SECTION ================= -->
+  <span id="sim" class="anchor"></span>
+  <section>
+    <div class="card">
+      <h2>Climate Impact Simulator</h2>
+      <p class="source">
+        Combines CO₂, CH₄, N₂O radiative forcing with policy levers. Educational approximation only.
+      </p>
+
+      <div class="grid grid-2" style="align-items:start">
+        <!-- === CONTROL PANEL === -->
+        <div>
+          <!-- Greenhouse gas input sliders -->
+          <div class="stat"><div>CO₂ concentration</div><div><span class="val" id="co2Val">420</span> <span class="unit">ppm</span></div></div>
+          <input id="co2" class="slider" type="range" min="280" max="800" value="420" step="1"/>
+
+          <div class="stat"><div>CH₄ concentration</div><div><span class="val" id="ch4Val">1900</span> <span class="unit">ppb</span></div></div>
+          <input id="ch4" class="slider" type="range" min="700" max="4000" value="1900" step="10"/>
+
+          <div class="stat"><div>N₂O concentration</div><div><span class="val" id="n2oVal">335</span> <span class="unit">ppb</span></div></div>
+          <input id="n2o" class="slider" type="range" min="260" max="500" value="335" step="1"/>
+
+          <!-- Policy sliders -->
+          <div class="stat"><div>Renewables share</div><div><span class="val" id="renVal">20</span> <span class="unit">%</span></div></div>
+          <input id="ren" class="slider" type="range" min="0" max="100" value="20" step="1"/>
+
+          <div class="stat"><div>Waste reduction</div><div><span class="val" id="wasteVal">0</span> <span class="unit">%</span></div></div>
+          <input id="waste" class="slider" type="range" min="0" max="60" value="0" step="1"/>
+
+          <div class="stat"><div>Deforestation rate</div><div><span class="val" id="defVal">0.3</span> <span class="unit">%/yr</span></div></div>
+          <input id="deforest" class="slider" type="range" min="0" max="2" value="0.3" step="0.1"/>
+
+          <!-- Control buttons -->
+          <div style="margin-top:14px;display:flex;gap:10px;flex-wrap:wrap">
+            <button class="btn btn-primary" id="recalc">Recalculate</button>
+            <button class="btn" id="reset">Reset defaults</button>
+          </div>
+        </div>
+
+        <!-- === OUTPUT PANEL === -->
+        <div>
+          <!-- Key metrics / results -->
+          <div class="kpi" style="display: grid; grid-template-columns: repeat(2,1fr); grid-template-rows: repeat(2,1fr); gap: 14px 20px;">
+            <div class="tile"><h3>Total forcing</h3><div class="big" id="rf">0.00</div><div class="unit">W/m²</div></div>
+            <div class="tile"><h3>ΔT (equilibrium)</h3><div class="big" id="dT">0.00</div><div class="unit">°C</div></div>
+            <div class="tile" id="slrTile">
+              <h3>Sea-level by 2100</h3>
+              <div class="big" id="slr">0.00</div>
+              <div class="unit">m</div>
+            </div>
+
+            <!--<div class="tile" style="text-align:center;position:relative;">
+              <h3>Air quality co-benefit</h3>
+              <canvas id="aqGauge" width="140" height="80" style="margin: 0 auto; display: block;"></canvas>
+              <div class="big" id="aq" style="margin-top: 8px;">—</div>
+              <div class="unit">qualitative</div>
+            </div>-->
+            <div class="tile aq-tile">
+              <h3>Air quality co-benefit</h3>
+              <div class="aq-gauge">
+                <svg viewBox="0 0 100 50" class="aq-arc">
+                  <path d="M10 50 A40 40 0 0 1 90 50" fill="none" stroke="#e0e0e0" stroke-width="10" />
+                  <path id="aqProgress" d="M10 50 A40 40 0 0 1 90 50" fill="none"
+                    stroke="#ff4d4d" stroke-width="10"
+                    stroke-linecap="round"
+                    stroke-dasharray="126" stroke-dashoffset="126" />
+                </svg>
+                <div class="aq-text" id="aqText">Low</div>
+              </div>
+              <div class="unit">qualitative</div>
+            </div>
+
+
+
+            </div>
+
+          </div>
+
+          <!-- Bar chart visualization -->
+          <div class="card" style="margin:24px 0 0 0; padding:28px 18px;">
+            <canvas id="contribChart" height="200"></canvas>
+          </div>
+
+          <!-- Rule-based insight generation -->
+          <div class="card" style="margin-top:28px;">
+            <h3 style="margin:0 0 8px 0">AI-powered insights (rule-based)</h3>
+            <div id="insights"></div>
+            <button class="btn" style="margin-top:8px" id="copyInsights">Copy insights</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  
+
+  <!-- ================= FOOTER ================= -->
+  <div class="footer">
+    <div> 2025 Carbon Playground • For CHIREC Hackathon 2025 • By Syntax Syndicate</div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>
