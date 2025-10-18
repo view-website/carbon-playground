@@ -169,21 +169,15 @@ function render() {
   // Display generated text insights
   const lines = generateInsights(out);
   $("insights").innerHTML = lines.map((l) => `<div class='insight'>${l}</div>`).join("");
+  updateImpacts(out);
   // Update sea-level tile “water fill”
   const MAX_SLR = 1.77; // maximum possible for your simulation
   const slrPercent = Math.min((out.slr / MAX_SLR) * 100, 100);
 
-  // Add a subtle wave-like effect using repeating-linear-gradient
-  $("slrTile").style.background = `
-    linear-gradient(to top, rgba(255,77,77,0.3) ${slrPercent}%, var(--card) ${slrPercent}%),
-    repeating-linear-gradient(
-      45deg,
-      rgba(255,77,77,0.2),
-      rgba(255,77,77,0.2) 5px,
-      rgba(255,77,77,0.3) 10px
-    )
-  `;
-  $("slrTile").style.borderRadius = "12px"; // optional, for smooth edges
+  // Red background fill from bottom up based on sea level percentage
+  const slrTile = document.getElementById("slrTile");
+  slrTile.style.background = `linear-gradient(to top, rgba(255,77,77,0.6) ${slrPercent}%, var(--card) ${slrPercent}%)`;
+  slrTile.style.borderRadius = "12px"; // optional, for smooth edges
 
 }
 document.getElementById('copyInsights').addEventListener('click', () => {
@@ -266,23 +260,23 @@ window.addEventListener('scroll', () => {
 // ==== Reveal Cards on Arrow Click ====
 // Maximum sea level possible in your parameter range
 
-const canvas = document.getElementById("particle-bg");
-const ctx = canvas.getContext("2d");
+const particleCanvas = document.getElementById("particle-bg");
+const particleCtx = particleCanvas.getContext("2d");
 
 let particles = [];
 const numParticles = 100;
 
 function resizeCanvas() {
-  canvas.width = window.innerWidth;
-  canvas.height = window.innerHeight;
+  particleCanvas.width = window.innerWidth;
+  particleCanvas.height = window.innerHeight;
 }
 window.addEventListener("resize", resizeCanvas);
 resizeCanvas();
 
 for (let i = 0; i < numParticles; i++) {
   particles.push({
-    x: Math.random() * canvas.width,
-    y: Math.random() * canvas.height,
+    x: Math.random() * particleCanvas.width,
+    y: Math.random() * particleCanvas.height,
     r: Math.random() * 2 + 1,
     dx: (Math.random() - 0.5) * 0.4,
     dy: (Math.random() - 0.5) * 0.4,
@@ -290,22 +284,76 @@ for (let i = 0; i < numParticles; i++) {
 }
 
 function drawParticles() {
-  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  particleCtx.clearRect(0, 0, particleCanvas.width, particleCanvas.height);
   particles.forEach((p) => {
-    ctx.beginPath();
-    ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-    ctx.fillStyle = "rgba(255, 80, 100, 0.25)";
-    ctx.fill();
+    particleCtx.beginPath();
+    particleCtx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+    particleCtx.fillStyle = "rgba(255, 80, 100, 0.25)";
+    particleCtx.fill();
     p.x += p.dx;
     p.y += p.dy;
 
     // Wrap around edges
-    if (p.x < 0) p.x = canvas.width;
-    if (p.x > canvas.width) p.x = 0;
-    if (p.y < 0) p.y = canvas.height;
-    if (p.y > canvas.height) p.y = 0;
+    if (p.x < 0) p.x = particleCanvas.width;
+    if (p.x > particleCanvas.width) p.x = 0;
+    if (p.y < 0) p.y = particleCanvas.height;
+    if (p.y > particleCanvas.height) p.y = 0;
   });
   requestAnimationFrame(drawParticles);
 }
 
 drawParticles();
+
+// ======= Impacts logic =======
+let popChart, riskRadar;
+function clamp01(x){ return Math.max(0, Math.min(1, x)); }
+
+function updateImpacts(out){
+  const dT = out.dT; const slr = out.slr; // °C, m
+  // --- Ice extent disk ---
+  const r0 = 70; // baseline radius
+  // shrink radius ~ 10% per °C up to 80% max shrink in this toy
+  const r = Math.max(r0*0.2, r0*(1 - 0.1*dT));
+  const disk = document.getElementById("iceDisk");
+  disk.setAttribute('r', r.toFixed(1));
+  document.getElementById("iceLabel").textContent = `${(Math.PI*r*r/ (Math.PI*r0*r0)*100).toFixed(0)}%`;
+
+  // --- Coastal submergence proxy ---
+  const sea = document.getElementById("sea");
+  const pct = clamp01(slr/1.5); // 1.5 m ~ 100% in this toy tank
+  sea.style.height = `${(20 + 70*pct).toFixed(0)}%`; // from 20% baseline up to ~90%
+  document.getElementById("slrLabel").textContent = slr.toFixed(2);
+
+  // --- Gauges ---
+  const coral = clamp01((dT-0.8)/1.2); // ramps after ~0.8°C to ~2.0°C
+  const heat = clamp01(dT/3.0);
+  const crop = clamp01((dT-1.2)/2.0);
+  const water = clamp01((dT-1.0)/2.0);
+  document.getElementById("gBleach").style.width = `${(coral*100).toFixed(0)}%`;
+  document.getElementById("gHeat").style.width = `${(heat*100).toFixed(0)}%`;
+  document.getElementById("gCrop").style.width = `${(crop*100).toFixed(0)}%`;
+  document.getElementById("gWater").style.width = `${(water*100).toFixed(0)}%`;
+
+  // --- Radar chart for risks ---
+  const radarData = [coral, heat, crop, water, clamp01((dT-0.7)/2.5)]; // wildfire as 5th
+  const radarLabels = ['Coral bleaching','Heatwave days','Crop yield','Water stress','Wildfire'];
+  if(riskRadar){ riskRadar.destroy(); }
+  riskRadar = new Chart(document.getElementById("riskChart"), {
+    type:'radar',
+    data:{ labels: radarLabels, datasets:[{ label:'Relative risk (0-1)', data: radarData, fill:true }] },
+    options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ r:{ suggestedMin:0, suggestedMax:1 } } }
+  });
+
+  // --- Population exposed bar chart ---
+  const baseline = 200; // million baseline near-coast population at risk (toy)
+  const mult = 1 + slr/0.5; // each 0.5 m roughly scales impact
+  const buckets = ['0.3 m','0.6 m','0.9 m','1.2 m'];
+  const vals = buckets.map((b,i)=> baseline*Math.max(0.2, (i+1)*0.25) * mult/2);
+  if(popChart){ popChart.destroy(); }
+  popChart = new Chart(document.getElementById("popChart"), {
+    type:'bar',
+    data:{ labels: buckets, datasets:[{ label:'People exposed (millions)', data: vals }] },
+    options:{ responsive:true, plugins:{ legend:{ display:false } }, scales:{ y:{ beginAtZero:true } } }
+  });
+}
+
